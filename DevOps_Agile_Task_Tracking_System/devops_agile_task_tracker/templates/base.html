@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}DevOps Task Tracker{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% if g.user %}
+  <nav class="navbar">
+    <a class="brand" href="{{ url_for('dashboard') }}">DevOps Task Tracker</a>
+    <div class="nav-links">
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('tasks') }}">Tasks</a>
+      <a href="{{ url_for('sprints') }}">Sprints</a>
+      <a href="{{ url_for('bugs') }}">Bugs</a>
+      {% if g.user['role'] == 'admin' %}<a href="{{ url_for('users') }}">Team</a>{% endif %}
+      <span style="font-size:13px;color:#d9e4f2">{{ g.user['name'] }} · {{ g.user['role']|title }}</span>
+      <a href="{{ url_for('logout') }}">Log out</a>
+    </div>
+  </nav>
+  {% endif %}
+  {% if g.user %}<main class="container">{% endif %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div style="margin: 18px auto; max-width: 1120px; padding: 0 18px;">
+      {% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+    </div>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+  {% if g.user %}<div class="footer">DevOps Task Tracking System · Agile Development Model · College Mini Project</div></main>{% endif %}
+</body>
+</html>

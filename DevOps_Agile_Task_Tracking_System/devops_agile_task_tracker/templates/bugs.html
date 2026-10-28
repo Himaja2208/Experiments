@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Bugs | DevOps Task Tracker{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Bug tracking</h1><div class="subtitle">Record defects and follow their resolution.</div></div></div>
+<div class="panel" style="margin-bottom:18px"><h2>Report a bug</h2>
+<form method="post" action="{{ url_for('create_bug') }}" class="stack">
+  <div><label>Bug title *</label><input name="title" required maxlength="150" placeholder="e.g. Task status does not update"></div>
+  <div><label>Description</label><textarea name="description" placeholder="Steps to reproduce and expected result"></textarea></div>
+  <div class="layout-two"><div><label>Severity</label><select name="severity">{% for s in severities %}<option>{{ s }}</option>{% endfor %}</select></div>
+  {% if g.user['role']=='admin' %}<div><label>Assign to</label><select name="assignee_id"><option value="">Unassigned</option>{% for m in members %}<option value="{{ m['id'] }}">{{ m['name'] }}</option>{% endfor %}</select></div>{% endif %}</div>
+  <div><button type="submit">Report bug</button></div>
+</form></div>
+<div class="panel"><h2>Reported bugs</h2>
+{% if bugs %}
+<div class="table-wrap"><table><thead><tr><th>Bug</th><th>Severity</th><th>Assignee</th><th>Reported</th><th>Status / action</th></tr></thead><tbody>
+{% for bug in bugs %}<tr>
+<td><strong>{{ bug['title'] }}</strong><br><span class="muted">{{ bug['description'] or 'No description' }}</span></td>
+<td><span class="badge {{ bug['severity']|lower }}">{{ bug['severity'] }}</span></td><td>{{ bug['assignee'] or 'Unassigned' }}</td><td>{{ bug['created_at'] }}</td>
+<td><form method="post" action="{{ url_for('update_bug_status', bug_id=bug['id']) }}" class="inline-form"><select name="status">{% for s in statuses %}<option value="{{ s }}" {% if bug['status']==s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select><button class="small" type="submit">Save</button></form></td>
+</tr>{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty">No bugs reported yet.</div>{% endif %}
+</div>
+{% endblock %}

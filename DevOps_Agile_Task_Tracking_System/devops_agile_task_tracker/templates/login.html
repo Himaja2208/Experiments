@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Login | DevOps Task Tracker{% endblock %}
+{% block content %}
+<div class="login-wrap">
+  <div class="login-card">
+    <h1>DevOps Task Tracker</h1>
+    <p class="subtitle">Organize tasks, sprints, and bugs with an Agile workflow.</p>
+    <form method="post" class="stack" style="margin-top:22px">
+      <div><label for="email">Email address</label><input id="email" type="email" name="email" required placeholder="you@example.com"></div>
+      <div><label for="password">Password</label><input id="password" type="password" name="password" required placeholder="Enter password"></div>
+      <button type="submit">Log in</button>
+    </form>
+    <div class="demo">
+      <strong>Demo administrator</strong><br>admin@example.com / Admin123!<br><br>
+      <strong>Demo team member</strong><br>member@example.com / Member123!
+    </div>
+  </div>
+</div>
+{% endblock %}

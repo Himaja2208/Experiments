@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Team | DevOps Task Tracker{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Team members</h1><div class="subtitle">Add team accounts for assigning project work.</div></div></div>
+<div class="layout-two">
+  <div class="panel"><h2>Add a team member</h2>
+  <form method="post" class="stack">
+    <div><label>Full name *</label><input name="name" required></div>
+    <div><label>Email *</label><input type="email" name="email" required></div>
+    <div><label>Temporary password (8+ characters) *</label><input type="password" name="password" minlength="8" required></div>
+    <button type="submit">Add member</button>
+  </form></div>
+  <div class="panel"><h2>Registered users</h2><div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>
+  {% for user in users %}<tr><td>{{ user['name'] }}</td><td>{{ user['email'] }}</td><td>{{ user['role']|title }}</td></tr>{% endfor %}
+  </tbody></table></div></div>
+</div>
+{% endblock %}

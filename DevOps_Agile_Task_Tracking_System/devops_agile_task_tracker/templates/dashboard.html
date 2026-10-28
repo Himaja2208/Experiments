@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | DevOps Task Tracker{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Project dashboard</h1><div class="subtitle">A quick overview of tasks and issues.</div></div>
+  <a class="button" href="{{ url_for('tasks') }}">View tasks</a>
+</div>
+<div class="grid">
+  <div class="card"><div class="stat-label">Total tasks</div><div class="stat-value">{{ counts.total }}</div></div>
+  <div class="card"><div class="stat-label">To do</div><div class="stat-value">{{ counts.todo }}</div></div>
+  <div class="card"><div class="stat-label">In progress</div><div class="stat-value">{{ counts.progress }}</div></div>
+  <div class="card"><div class="stat-label">Open bugs</div><div class="stat-value">{{ counts.bugs }}</div></div>
+</div>
+<div class="panel">
+  <h2>{% if g.user['role'] == 'admin' %}Recently created tasks{% else %}Your assigned tasks{% endif %}</h2>
+  {% if tasks %}
+  <div class="table-wrap"><table><thead><tr><th>Task</th><th>Assignee</th><th>Sprint</th><th>Priority</th><th>Status</th></tr></thead><tbody>
+  {% for task in tasks %}
+    <tr><td><strong>{{ task['title'] }}</strong><br><span class="muted">{{ task['description']|truncate(75) }}</span></td>
+    <td>{{ task['assignee'] or 'Unassigned' }}</td><td>{{ task['sprint'] or 'Backlog' }}</td>
+    <td><span class="badge {{ task['priority']|lower }}">{{ task['priority'] }}</span></td>
+    <td><span class="badge {{ task['status']|lower|replace(' ', '-') }}">{{ task['status'] }}</span></td></tr>
+  {% endfor %}
+  </tbody></table></div>
+  {% else %}<div class="empty">No tasks yet. {% if g.user['role']=='admin' %}Create your first task from the Tasks page.{% else %}Ask your administrator to assign you a task.{% endif %}</div>{% endif %}
+</div>
+{% endblock %}

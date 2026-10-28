@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Sprints | DevOps Task Tracker{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Sprints</h1><div class="subtitle">Plan time-boxed iterations and review their progress.</div></div></div>
+{% if g.user['role']=='admin' %}
+<div class="panel" style="margin-bottom:18px"><h2>Create a sprint</h2>
+<form method="post" action="{{ url_for('create_sprint') }}" class="stack">
+  <div><label>Sprint name *</label><input name="name" required placeholder="e.g. Sprint 1 - Core Tasks"></div>
+  <div><label>Sprint goal</label><textarea name="goal" placeholder="What should be delivered by the end of this sprint?"></textarea></div>
+  <div class="layout-two"><div><label>Start date</label><input type="date" name="start_date"></div><div><label>End date</label><input type="date" name="end_date"></div></div>
+  <div><label>Status</label><select name="status"><option>Planned</option><option>Active</option><option>Completed</option></select></div>
+  <div><button type="submit">Create sprint</button></div>
+</form></div>
+{% endif %}
+<div class="panel"><h2>Sprint overview</h2>
+{% if sprints %}
+{% for sprint in sprints %}
+  {% set total = sprint['task_count'] or 0 %}
+  {% set done = sprint['done_count'] or 0 %}
+  {% set pct = (done * 100 // total) if total else 0 %}
+  <div style="padding:14px 0;border-bottom:1px solid #e8edf3">
+    <div class="page-head" style="margin-bottom:5px"><div><strong>{{ sprint['name'] }}</strong><div class="muted">{{ sprint['goal'] or 'No sprint goal provided' }}</div></div><span class="badge {{ sprint['status']|lower }}">{{ sprint['status'] }}</span></div>
+    <div class="muted">{{ sprint['start_date'] or 'Start date not set' }} → {{ sprint['end_date'] or 'End date not set' }}</div>
+    <div class="progress"><span style="width:{{ pct }}%"></span></div>
+    <div class="muted">{{ done }} of {{ total }} tasks completed ({{ pct }}%)</div>
+  </div>
+{% endfor %}
+{% else %}<div class="empty">No sprints created yet.</div>{% endif %}
+</div>
+{% endblock %}
